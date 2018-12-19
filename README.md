@@ -1,9 +1,9 @@
 # Wine
 ## The goal of this project is to demonstrate a dataset of wine reviews
-### The site has 3 main parts
-#### Wine
-#### Wine Review
-#### Wine with filter
+### The project has 3 main parts
+#### Wine List
+#### Wine Review List
+#### Wine List with filters
 ### Here is the dataset link: https://www.kaggle.com/zynicide/wine-reviews
 ## Below is the data model
 ![GitHub Logo](/static/img/model.png)
