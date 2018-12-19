@@ -1,0 +1,24 @@
+{% extends 'wine_review/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+{% include 'wine_review/pagination.html' %}
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="px-2 py-2" style="border:1px solid #8E8D8A;">
+        <form action="" method="get">
+          {{ filter.form|crispy }}
+          <button type="submint" class="btn btn-outline-primary">filter</button>
+        </form>
+      </div>
+    </div>
+    <div class="col-sm-9">
+      {% for wine in object_list %}
+        <h4><a href="{% url 'wine_detail' wine.pk %}">{{ wine.wine_title | safe }}</a></h4>
+      {% empty %}
+        Select one or more filters relevant to your search and then click "filter".
+      {% endfor %}
+    </div>
+  </div>
+{% endblock content %}

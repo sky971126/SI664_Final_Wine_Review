@@ -1,0 +1,10 @@
+{% extends 'wine_review/base.html' %}
+
+  {% block content %}
+  <form method="post">
+    {% csrf_token %}
+    <p>Are you sure you want to delete the Wine "{{wine.wine_title}}"?</p>
+    <button type="submit" class="btn btn-outline-danger">delete</button>
+    <a class="btn btn-outline-secondary" href="{% url 'wine_detail' wine.pk%}">cancel</a>
+  </form>
+  {% endblock content %}

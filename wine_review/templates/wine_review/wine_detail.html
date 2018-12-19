@@ -1,0 +1,137 @@
+{% extends 'wine_review/base.html' %}
+   <!-- safe filter on for raw HTML stored in database -->
+{% block content %}
+  {% if user.is_authenticated %}
+    <header>
+      <div class="row">
+        <div class="col-sm-10">
+          <h2>{{ wine.wine_title | safe }}</h2>
+        </div>
+      </div>
+      <div class="col-xs-1">
+        {% if user.is_authenticated %}
+          <a class="btn btn-outline-secondary" href="{% url 'wine_update' wine.pk %}">edit</a>
+        {% endif %}
+      </div>
+      <div class="col-xs-1">
+        {% if user.is_authenticated %}
+          &nbsp;<a class="btn btn-outline-warning" href="{% url 'wine_delete' wine.pk %}">delete</a>
+        {% endif %}
+      </div>
+    </header>
+    {% for review in wine.get_wine_review %}
+      {% if review.taster.taster_name %}
+        <div class="row">
+          <div class="col-sm-2">
+            <p>Taster</p>
+          </div>
+          <div class="col-sm-10">
+            <p>
+              {{review.taster.taster_name}}
+            </p>
+          </div>
+        </div>
+      {% endif %}
+      {% if review.taster.taster_twitter %}
+        <div class="row">
+          <div class="col-sm-2">
+            <p>Taster's Twitter</p>
+          </div>
+          <div class="col-sm-10">
+            <p>
+              {{review.taster.taster_twitter}}
+            </p>
+          </div>
+        </div>
+      {% endif %}
+      {% if review.rating %}
+        <div class="row">
+          <div class="col-sm-2">
+            <p>Rating</p>
+          </div>
+          <div class="col-sm-10">
+            <p>
+              {{review.rating}}
+            </p>
+          </div>
+        </div>
+      {% endif %}
+      {% if review.description %}
+        <div class="row">
+          <div class="col-sm-2">
+            <p>Description</p>
+          </div>
+          <div class="col-sm-10">
+            <p>
+              {{review.description}}
+            </p>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    {% if wine.wine_variety.wine_variety_name %}
+      <div class="row">
+        <div class="col-sm-2">
+          <p>Grape Variety</p>
+        </div>
+        <div class="col-sm-10">
+          <p>
+            {{wine.wine_variety.wine_variety_name}}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+    {% if wine.winery.winery_name %}
+      <div class="row">
+        <div class="col-sm-2">
+          <p>Winery</p>
+        </div>
+        <div class="col-sm-10">
+          <p>
+            {{wine.winery.winery_name}}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+    {% if wine.region.region_name %}
+      <div class="row">
+        <div class="col-sm-2">
+          <p>Region</p>
+        </div>
+        <div class="col-sm-10">
+          <p>
+            {{wine.region.region_name}}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+    {% if wine.province.province_name %}
+      <div class="row">
+        <div class="col-sm-2">
+          <p>Province</p>
+        </div>
+        <div class="col-sm-10">
+          <p>
+            {{wine.province.province_name}}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+    {% if wine.country.country_name %}
+      <div class="row">
+        <div class="col-sm-2">
+          <p>Country</p>
+        </div>
+        <div class="col-sm-10">
+          <p>
+            {{wine.country.country_name}}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+
+  {% else %}
+    <a href="{% url 'login' %}">Log in</a>
+  {% endif %}
+  {% endblock content %}

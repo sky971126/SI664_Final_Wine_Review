@@ -28,12 +28,52 @@ def main(argv=None):
     logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
     # Read in source
-    source_path = os.path.join('input', 'wine_review_trimmed.csv')
-    source_data_frame_trimmed = read_csv(source_path, ',').loc[:, ["winery","none"]]
-    source_data_frame_trimmed = extract_filtered_series(source_data_frame_trimmed, "winery")
-    source_trimmed_csv = os.path.join('output', 'winery_trimmed.csv')
+    source_path = os.path.join('input', 'wine_review_trimmed_short.csv')
+    source_data_frame_trimmed_all = read_csv(source_path, ',')[0:5000]
+    
+    source_data_frame_trimmed = source_data_frame_trimmed_all.loc[:, ["taster_name","title","description","points"]]
+    source_trimmed_csv = os.path.join('output_short', 'manytomany_trimmed_short.csv')
     write_series_to_csv(source_data_frame_trimmed, source_trimmed_csv, ',', False)
     logging.info(msg[0].format(os.path.abspath(source_trimmed_csv)))
+
+    source_data_frame_trimmed = source_data_frame_trimmed_all.loc[:, ["taster_name","taster_twitter_handle"]]
+    source_trimmed_csv = os.path.join('output_short', 'taster_trimmed_short.csv')
+    write_series_to_csv(source_data_frame_trimmed, source_trimmed_csv, ',', False)
+    logging.info(msg[0].format(os.path.abspath(source_trimmed_csv)))
+
+    source_data_frame_trimmed = source_data_frame_trimmed_all.loc[:, ["title","variety","winery","region_1","province","country"]]
+    source_trimmed_csv = os.path.join('output_short', 'wine_trimmed_short.csv')
+    write_series_to_csv(source_data_frame_trimmed, source_trimmed_csv, ',', False)
+    logging.info(msg[0].format(os.path.abspath(source_trimmed_csv)))
+
+    source_data_frame_trimmed = source_data_frame_trimmed_all.loc[:, ["province","country"]]
+    source_trimmed_csv = os.path.join('output_short', 'province_trimmed_short.csv')
+    write_series_to_csv(source_data_frame_trimmed, source_trimmed_csv, ',', False)
+    logging.info(msg[0].format(os.path.abspath(source_trimmed_csv)))
+
+    source_data_frame_trimmed = source_data_frame_trimmed_all.loc[:, ["region_1","province"]]
+    source_trimmed_csv = os.path.join('output_short', 'region_trimmed_short.csv')
+    write_series_to_csv(source_data_frame_trimmed, source_trimmed_csv, ',', False)
+    logging.info(msg[0].format(os.path.abspath(source_trimmed_csv)))
+
+    source_data_frame_trimmed = source_data_frame_trimmed_all.loc[:, ["country"]]
+    source_data_frame_trimmed = extract_filtered_series(source_data_frame_trimmed, "country")
+    source_trimmed_csv = os.path.join('output_short', 'country_trimmed_short.csv')
+    write_series_to_csv(source_data_frame_trimmed, source_trimmed_csv, ',', False)
+    logging.info(msg[0].format(os.path.abspath(source_trimmed_csv)))
+
+    source_data_frame_trimmed = source_data_frame_trimmed_all.loc[:, ["winery"]]
+    source_data_frame_trimmed = extract_filtered_series(source_data_frame_trimmed, "winery")
+    source_trimmed_csv = os.path.join('output_short', 'winery_trimmed_short.csv')
+    write_series_to_csv(source_data_frame_trimmed, source_trimmed_csv, ',', False)
+    logging.info(msg[0].format(os.path.abspath(source_trimmed_csv)))
+
+    source_data_frame_trimmed = source_data_frame_trimmed_all.loc[:, ["variety"]]
+    source_data_frame_trimmed = extract_filtered_series(source_data_frame_trimmed, "variety")
+    source_trimmed_csv = os.path.join('output_short', 'wine_variety_trimmed_short.csv')
+    write_series_to_csv(source_data_frame_trimmed, source_trimmed_csv, ',', False)
+    logging.info(msg[0].format(os.path.abspath(source_trimmed_csv)))
+
 
 
 

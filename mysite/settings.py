@@ -11,7 +11,13 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from mysite import secrets
 
+SECRET_KEY = secrets.SECRET_KEY
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
+PASSWORD = secrets.PASSWORD
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,7 +31,7 @@ SECRET_KEY = '@o+fu#-du7r$-#^)vd^*5heic6tr3p0ucp+$=cup@z7jhy$d00'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,9 +43,35 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #local
+    'wine_review.apps.WineReviewConfig',
+    'api.apps.ApiConfig',
+
+    #Third-party
+    'corsheaders',
+    'crispy_forms',
+    'django_filters',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'rest_auth',
+    'rest_auth.registration',
+    'rest_framework_swagger',
+    'social_django',
+    'test_without_migrations',
+    'django.contrib.sites',
 ]
 
+SITE_ID = 1
+
+TEST_RUNNER = 'wine_review.utils.UnManagedModelTestRunner'
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -47,6 +79,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -62,6 +95,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',                     # <-- Add
+                'social_django.context_processors.login_redirect',  
             ],
         },
     },
@@ -78,9 +113,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'wine_review',
         'USER': 'sky',
-        'PASSWORD': 'qazwsxedc',
+        'PASSWORD': PASSWORD,
         'OPTIONS': {
-            'read_default_file': 'C:\ProgramData\MySQL\MySQL Server 8.0\my.ini',
+            'read_default_file': '/etc/mysql/my.cnf',
+            #'read_default_file': 'C:\ProgramData\MySQL\MySQL Server 8.0\my.ini',
         }
     }
 }
@@ -110,7 +146,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
@@ -123,3 +159,50 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+AUTHENTICATION_BACKENDS = (
+    # 'social_core.backends.open_id.OpenIdAuth',
+    # 'social_core.backends.google.GoogleOpenId',
+    'social_core.backends.google.GoogleOAuth2',                                  # <-- Uncomment
+    # 'social_core.backends.google.GoogleOAuth',
+    # 'social_core.backends.twitter.TwitterOAuth',
+    # 'social_core.backends.yahoo.YahooOpenId',
+    'django.contrib.auth.backends.ModelBackend',                                 # <-- Uncomment
+)
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+LOGIN_URL = '/auth/login/google-oauth2/'
+# LOGIN_URL = 'login'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+# django-crispy-forms
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+CORS_ORIGIN_WHITELIST = (
+    '127.0.0.1:3000/'
+)
+
+# Use Django's standard `django.contrib.auth` permissions, or allow read-only access for
+# unauthenticated users.
+# Default Auth: Basic (retired in favor of TokenAuth)
+# Default Auth: SessionAuth (required by browsable API)
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+	    'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        # 'rest_framework.permissions.AllowAny'
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+

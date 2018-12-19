@@ -1,0 +1,41 @@
+{% extends 'wine_review/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  <article>
+    <header>
+      <div class="row">
+        <div class="col-sm-11">
+          <h2>Wine Review</h2>
+        </div>
+      </div>
+    </header>
+
+    <!-- WARNING: there is no missing code between <nav>...</nav> -->
+    
+    {% include 'wine_review/pagination.html' %}
+    {% if review_list %}
+    <ul>
+      {% for review in review_list %}
+
+      <!-- safe filter on for raw HTML stored in database -->
+      <li>
+        <a href="{% url 'review_detail' review.pk %}">{{ review.wine.wine_title | safe }}
+          {% if review.taster.taster_name %}
+          by {{review.taster.taster_name}}
+          {% endif %}
+        </a>
+      </li>
+
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p>No wine review is available to view.</p>
+    {% endif %}
+
+    <p>page count: {{ review_list.count }}</p>
+  </article>
+{% else %}
+  <a href="{% url 'login' %}">Log in</a>
+{% endif %}
+{% endblock content %}
